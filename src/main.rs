@@ -28,7 +28,7 @@ impl eframe::App for MyApp
                 let mut value = 10;
                 let label_font = ui.label("Font size");
                 let slider = ui.add(egui::Slider::new(&mut self.font_size, 5.0..=35.0)).labelled_by(label_font.id);
-                ui.label("      negro code editor")
+                ui.label("      men code editor")
             });
             //Exit=========================
             
