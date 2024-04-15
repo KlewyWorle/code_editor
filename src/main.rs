@@ -16,6 +16,37 @@ struct MyApp
     font_size : f32
 }
 
+fn text_conv(ui : &egui::Ui, app : &mut MyApp)
+{
+    if ui.input(|i|  i.events.contains(&egui::Event::Text("{".to_owned()))) //There is no { in egui::Key
+        {   
+            if app.cursor_index == app.text.len() //If u press shift and { at the end of the string it adds it to the end
+            {
+                app.text += "}";
+                //println!("wtf");
+                
+            }
+            else
+            {
+                app.text.replace_range(app.cursor_index..(app.cursor_index), "}");
+            }
+            
+        }
+        if ui.input(|i| i.events.contains(&egui::Event::Text("(".to_owned()))) // { kinda logic
+        {
+            if app.cursor_index == app.text.len()
+            {
+                app.text += ")";
+                //println!("wtf");
+                
+            }
+            else
+            {
+                app.text.replace_range(app.cursor_index..(app.cursor_index), ")");
+            }
+        }
+
+}
 
 impl eframe::App for MyApp
 {
@@ -70,36 +101,8 @@ impl eframe::App for MyApp
 
 
             //Exit===================================
-            //println!("{}", self.cursor_index);
-            
-            if ui.input(|i|  i.events.contains(&egui::Event::Text("{".to_owned()))) //There is no { in egui::Key
-            {   
-                if self.cursor_index == self.text.len() //If u press shift and { at the end of the string it adds it to the end
-                {
-                    self.text += "}";
-                    //println!("wtf");
-                    
-                }
-                else
-                {
-                    self.text.replace_range(self.cursor_index..(self.cursor_index), "}");
-                }
-                
-            }
-            if ui.input(|i| i.events.contains(&egui::Event::Text("(".to_owned()))) // { kinda logic
-            {
-                if self.cursor_index == self.text.len()
-                {
-                    self.text += ")";
-                    //println!("wtf");
-                    
-                }
-                else
-                {
-                    self.text.replace_range(self.cursor_index..(self.cursor_index), ")");
-                }
-            }
 
+            text_conv(ui, self); //Handle {} and ()
             
             //println!("{:?}", ctx.input(|f| return f.curs ));
             //keys_down.iter().for_each(|f| println!("fff {}", f.name()));
@@ -174,18 +177,28 @@ impl eframe::App for MyApp
             
             egui::ScrollArea::new(true).show(ui, |ui|
             {
-                // let t_ed = ui.add(egui::TextEdit::multiline(&mut self.text).hint_text("Type...")
-                // .min_size(egui::vec2(ui.available_width(), ui.available_height()))
-                // .font(egui::FontId::new(100.0, egui::FontFamily::Monospace))
-                // .desired_width(ui.available_width())
-                // .code_editor());
+                let mut theme = egui_extras::syntax_highlighting::CodeTheme::from_memory(ui.ctx());
+                ui.collapsing("Theme", |ui| {
+                    ui.group(|ui| {
+                        theme.ui(ui);
+                        theme.clone().store_in_memory(ui.ctx());
+                    });
+                });
 
+                let mut layouter = |ui: &egui::Ui, string: &str, wrap_width: f32| {
+                    let mut layout_job =
+                        egui_extras::syntax_highlighting::highlight(ui.ctx(), &theme, string, "rs");
+                    
+                    layout_job.wrap.max_width = wrap_width;
+                    ui.fonts(|f| f.layout_job(layout_job))
+                };
                 let t_edit = egui::TextEdit::multiline(&mut self.text).hint_text("Type...")
                 .min_size(egui::vec2(ui.available_width(), ui.available_height()))
-                .font(egui::FontId::new(100.0, egui::FontFamily::Monospace))
+                //.font(egui::FontId::new(100.0, egui::FontFamily::Monospace))
                 .desired_width(ui.available_width())
                 .code_editor()
                 .font(egui::FontId::proportional(self.font_size))
+                //.layouter(&mut layouter)
                 .show(ui); //Use it so it returns TextEditOutput instead of response
 
                 if let Some(text) = t_edit.cursor_range
