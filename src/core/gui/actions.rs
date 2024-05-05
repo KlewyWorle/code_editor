@@ -50,12 +50,7 @@ fn open_file(app : &mut app::MyApp)
 
 pub fn actions_menu(ctx: &egui::Context, ui : &mut egui::Ui, app : &mut app::MyApp)
 {
-    let sc  = egui::KeyboardShortcut::new(egui::Modifiers::CTRL, egui::Key::R);
-    if ui.input_mut(|i| i.consume_shortcut(&sc)) //Action window shortcut
-    {
-        //println!("wtf");
-        app.show_actions = true;
-    }
+    
 
     if app.show_actions //Show action window
     {
