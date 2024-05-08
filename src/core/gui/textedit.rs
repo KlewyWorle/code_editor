@@ -98,6 +98,62 @@ pub fn getSyntax(lang : &str) -> Syntax
             //println!("fuck");
             Syntax::python()
         }
+        "cpp" =>
+        {
+            Syntax {
+                language: "Rust",
+                case_sensitive: true,
+                comment: "//",
+                comment_multiline: ["/*", "*/"],
+                hyperlinks: BTreeSet::from(["http"]),
+                keywords: BTreeSet::from([
+                    "break", "const", "continue", "else", "enum", "extern", "void", "for",
+                    "if", "class", "while", "switch", "include", "public", "private", "protected",
+                    "return", "this", "struct", "using", "template",
+                    "async", "override", "do", "define", "override",
+                     "typeid", "virtual", "try", "static_cast", "reinterpret_cast" , "dynamic_cast"
+                ]),
+                types: BTreeSet::from([
+            
+                    "unique_ptr",
+                    "shared_ptr",
+                    "weak_ptr",
+                    // Primitives
+                    "bool",
+                    "int",
+                    "unsigned",
+                    "int16_t",
+                    "uint16_t",
+                    "int32_t",
+                    "uint32_t",
+                    "int64_t",
+                    "uint64_t",
+                    "usize",
+                    "float",
+                    "char",
+                    "std::string",
+                    "string",
+                    // STD Collections
+                    "vector",
+                    "std::vector",
+                    "ordered_map",
+                    "std::ordered_map",
+                    "unordered_set",
+                    "std::unordered_set",
+                    "unordered_map",
+                    "std::unordered_map",
+                    "ordered_set",
+                    "std::ordered_set",
+                    "std::deque",
+                    "deque",
+                    // RC
+                    // ARC
+                    "mutex",
+                    "std::mutex"
+                ]),
+                special: BTreeSet::from(["this", "static", "true", "false"]),
+            }
+        }
         _ => 
         {
             Syntax::default()
