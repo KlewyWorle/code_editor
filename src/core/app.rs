@@ -16,13 +16,14 @@ pub struct MyApp
     pub show_actions : bool, // Show action window
     pub current_dir : String,
     pub font_size : f32,
-    pub language : String
+    pub language : String,
+    pub cmd : String
 }
 impl Default for MyApp
 {
     fn default() -> Self {
 		println!("hello kcode");
-        MyApp { text: String::from(""), confirm_window : false, can_exit : false, cursor_index : 0, show_actions : false, current_dir : String::new(), font_size : 15.0, language: "None".to_string()}
+        MyApp { text: String::from(""), confirm_window : false, can_exit : false, cursor_index : 0, show_actions : false, current_dir : String::new(), font_size : 15.0, language: "None".to_string(), cmd : "".to_owned()}
     }
 }
 
@@ -60,6 +61,11 @@ impl eframe::App for MyApp
         
         egui::CentralPanel::default().show(ctx, |ui| //Erm
         {
+            // ui.horizontal(|ui|
+            // {
+            //     let mut str = String::new();
+            //     egui::TextEdit::singleline(&mut self.cmd).show(ui);
+            // });
             ui.horizontal(|ui|
             {
                 
@@ -68,7 +74,7 @@ impl eframe::App for MyApp
                 
                 ui.label("      men code editor")
             });
-            //Exit=========================
+           
             
             keyboard::process_input(ctx, ui, self);
             
@@ -77,7 +83,8 @@ impl eframe::App for MyApp
             
             
             actions::actions_menu(ctx, ui, self); //Action menu
-            
+
+           
         });
     }
 }
